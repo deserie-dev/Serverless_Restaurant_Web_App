@@ -9,6 +9,12 @@
   "author": "Deserie Murembeni",
   "license": "ISC",
   "devDependencies": {
+    "aws-sdk": "^2.912.0",
     "serverless": "^2.43.0"
+  },
+  "dependencies": {
+    "mustache": "^4.2.0",
+    "superagent": "^6.1.0",
+    "superagent-promise": "^1.1.0"
   }
 }
