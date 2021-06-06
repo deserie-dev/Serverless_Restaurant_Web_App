@@ -151,6 +151,15 @@
                       "Arn"
                     ]
                   }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "execute-api:Invoke"
+                  ],
+                  "Resource": {
+                    "Fn::Sub": "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/restaurants"
+                  }
                 }
               ]
             }
@@ -231,7 +240,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/serverless-restaurant/dev/1622279989889-2021-05-29T09:19:49.889Z/serverless-restaurant.zip"
+          "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/serverless-restaurant.zip"
         },
         "Handler": "s_get_index.handler",
         "Runtime": "nodejs12.x",
@@ -272,7 +281,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/serverless-restaurant/dev/1622279989889-2021-05-29T09:19:49.889Z/serverless-restaurant.zip"
+          "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/serverless-restaurant.zip"
         },
         "Handler": "s_get_restaurants.handler",
         "Runtime": "nodejs12.x",
@@ -295,24 +304,24 @@
         "GetDashrestaurantsLogGroup"
       ]
     },
-    "GetDashindexLambdaVersion3TsXNf6411ylybnPejY4qrYT5O8mrYRqD878lIVZU": {
+    "GetDashindexLambdaVersiondCX5XsYQoyPE7M9CFtfTr64rQfWEIUD4aCy2PZmiTM": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetDashindexLambdaFunction"
         },
-        "CodeSha256": "3YIBt8GUeKgJv670pxhZi1VNMK4fEtjcTvw8HfjhccE="
+        "CodeSha256": "L5r3e/YQxuBQSIDnWuFyEEsrWdPnKR1rbyui9tw8Ni0="
       }
     },
-    "GetDashrestaurantsLambdaVersionZa6mnMLEz6vNmK4jfXk09JLb7GMz7qJvrFv5FFjw": {
+    "GetDashrestaurantsLambdaVersionEeV5pULcBGJkQy51VkiuClnITKyimtwN4tSx51Vq1X0": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetDashrestaurantsLambdaFunction"
         },
-        "CodeSha256": "3YIBt8GUeKgJv670pxhZi1VNMK4fEtjcTvw8HfjhccE="
+        "CodeSha256": "L5r3e/YQxuBQSIDnWuFyEEsrWdPnKR1rbyui9tw8Ni0="
       }
     },
     "ApiGatewayRestApi": {
@@ -400,7 +409,7 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "AWS_IAM",
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -431,7 +440,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1622279932137": {
+    "ApiGatewayDeployment1622977877203": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -627,7 +636,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/serverless-restaurant/dev/1622279989889-2021-05-29T09:19:49.889Z/custom-resources.zip"
+          "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/custom-resources.zip"
         },
         "FunctionName": "serverless-restaurant-dev-custom-resource-apigw-cw-role",
         "Handler": "apiGatewayCloudWatchRole/handler.handler",
@@ -721,7 +730,7 @@
     "GetDashindexLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetDashindexLambdaVersion3TsXNf6411ylybnPejY4qrYT5O8mrYRqD878lIVZU"
+        "Ref": "GetDashindexLambdaVersiondCX5XsYQoyPE7M9CFtfTr64rQfWEIUD4aCy2PZmiTM"
       },
       "Export": {
         "Name": "sls-serverless-restaurant-dev-GetDashindexLambdaFunctionQualifiedArn"
@@ -730,7 +739,7 @@
     "GetDashrestaurantsLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetDashrestaurantsLambdaVersionZa6mnMLEz6vNmK4jfXk09JLb7GMz7qJvrFv5FFjw"
+        "Ref": "GetDashrestaurantsLambdaVersionEeV5pULcBGJkQy51VkiuClnITKyimtwN4tSx51Vq1X0"
       },
       "Export": {
         "Name": "sls-serverless-restaurant-dev-GetDashrestaurantsLambdaFunctionQualifiedArn"

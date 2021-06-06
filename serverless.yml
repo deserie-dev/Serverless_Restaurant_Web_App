@@ -38,10 +38,10 @@ provider:
         Fn::GetAtt:
           - "restaurantsTable"
           - "Arn"
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
+    - Effect: "Allow"
+      Action:
+        - "execute-api:Invoke"
+      Resource: arn:aws:execute-api:#{AWS::Region}:#{AWS::AccountId}:*/*/GET/restaurants
 #        Fn::Join:
 #          - ""
 #          - - "arn:aws:s3:::"
@@ -81,6 +81,7 @@ functions:
       - http:
           path: /restaurants/
           method: get
+          authorizer: aws_iam
     environment:
       restaurants_table: restaurants-deserie
     #    The following are a few example events you can configure
@@ -143,3 +144,6 @@ resources:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+plugins:
+  - serverless-pseudo-parameters
