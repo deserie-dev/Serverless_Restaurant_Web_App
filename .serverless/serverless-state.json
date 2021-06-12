@@ -262,7 +262,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/serverless-restaurant.zip"
+                "S3Key": "serverless/serverless-restaurant/dev/1623496855533-2021-06-12T11:20:55.533Z/serverless-restaurant.zip"
               },
               "Handler": "s_get_index.handler",
               "Runtime": "nodejs12.x",
@@ -272,16 +272,7 @@
               "Environment": {
                 "Variables": {
                   "restaurants_api": {
-                    "Fn::Join": [
-                      "",
-                      [
-                        "https://",
-                        {
-                          "Ref": "ApiGatewayRestApi"
-                        },
-                        ".execute-api.us-east-1.amazonaws.com/dev/restaurants"
-                      ]
-                    ]
+                    "Fn::Sub": "https://${ApiGatewayRestApi}.execute-api.${AWS::Region}.amazonaws.com/dev/restaurants"
                   }
                 }
               },
@@ -303,7 +294,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/serverless-restaurant.zip"
+                "S3Key": "serverless/serverless-restaurant/dev/1623496855533-2021-06-12T11:20:55.533Z/serverless-restaurant.zip"
               },
               "Handler": "s_get_restaurants.handler",
               "Runtime": "nodejs12.x",
@@ -326,24 +317,24 @@
               "GetDashrestaurantsLogGroup"
             ]
           },
-          "GetDashindexLambdaVersiondCX5XsYQoyPE7M9CFtfTr64rQfWEIUD4aCy2PZmiTM": {
+          "GetDashindexLambdaVersion9bqDze8siscInlzWSreKdweF1WUVWr99u7Rg4BbgwY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetDashindexLambdaFunction"
               },
-              "CodeSha256": "L5r3e/YQxuBQSIDnWuFyEEsrWdPnKR1rbyui9tw8Ni0="
+              "CodeSha256": "bP/GWcOrUFOEnLzx0BOQWne7LfQMyuWrE8j16u3A6A0="
             }
           },
-          "GetDashrestaurantsLambdaVersionEeV5pULcBGJkQy51VkiuClnITKyimtwN4tSx51Vq1X0": {
+          "GetDashrestaurantsLambdaVersionyUWwqdkOzAdfI6Tt7OKbzqZ24EyYjbzjqjQoTE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetDashrestaurantsLambdaFunction"
               },
-              "CodeSha256": "L5r3e/YQxuBQSIDnWuFyEEsrWdPnKR1rbyui9tw8Ni0="
+              "CodeSha256": "bP/GWcOrUFOEnLzx0BOQWne7LfQMyuWrE8j16u3A6A0="
             }
           },
           "ApiGatewayRestApi": {
@@ -462,7 +453,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1622977877203": {
+          "ApiGatewayDeployment1623496791067": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -658,7 +649,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z/custom-resources.zip"
+                "S3Key": "serverless/serverless-restaurant/dev/1623496855533-2021-06-12T11:20:55.533Z/custom-resources.zip"
               },
               "FunctionName": "serverless-restaurant-dev-custom-resource-apigw-cw-role",
               "Handler": "apiGatewayCloudWatchRole/handler.handler",
@@ -696,6 +687,86 @@
                 "ReadCapacityUnits": 1,
                 "WriteCapacityUnits": 1
               }
+            }
+          },
+          "CognitoUserPool": {
+            "Type": "AWS::Cognito::UserPool",
+            "Properties": {
+              "AliasAttributes": [
+                "email"
+              ],
+              "UsernameConfiguration": {
+                "CaseSensitive": false
+              },
+              "AutoVerifiedAttributes": [
+                "email"
+              ],
+              "Policies": {
+                "PasswordPolicy": {
+                  "MinimumLength": 8,
+                  "RequireLowercase": true,
+                  "RequireNumbers": true,
+                  "RequireUppercase": true,
+                  "RequireSymbols": true
+                }
+              },
+              "Schema": [
+                {
+                  "AttributeDataType": "String",
+                  "Mutable": true,
+                  "Name": "given_name",
+                  "Required": true,
+                  "StringAttributeConstraints": {
+                    "MinLength": "1"
+                  }
+                },
+                {
+                  "AttributeDataType": "String",
+                  "Mutable": true,
+                  "Name": "family_name",
+                  "Required": true,
+                  "StringAttributeConstraints": {
+                    "MinLength": "1"
+                  }
+                },
+                {
+                  "AttributeDataType": "String",
+                  "Mutable": true,
+                  "Name": "email",
+                  "Required": true,
+                  "StringAttributeConstraints": {
+                    "MinLength": "1"
+                  }
+                }
+              ]
+            }
+          },
+          "WebCognitoUserPoolClient": {
+            "Type": "AWS::Cognito::UserPoolClient",
+            "Properties": {
+              "ClientName": "web",
+              "UserPoolId": {
+                "Ref": "CognitoUserPool"
+              },
+              "ExplicitAuthFlows": [
+                "ALLOW_USER_SRP_AUTH",
+                "ALLOW_REFRESH_TOKEN_AUTH"
+              ],
+              "PreventUserExistenceErrors": "ENABLED"
+            }
+          },
+          "ServerCognitoUserPoolClient": {
+            "Type": "AWS::Cognito::UserPoolClient",
+            "Properties": {
+              "ClientName": "server",
+              "UserPoolId": {
+                "Ref": "CognitoUserPool"
+              },
+              "ExplicitAuthFlows": [
+                "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+                "ALLOW_REFRESH_TOKEN_AUTH"
+              ],
+              "PreventUserExistenceErrors": "ENABLED"
             }
           },
           "CloudWatchLogsSubscriptionFilterGetDashindexLogGroup": {
@@ -752,7 +823,7 @@
           "GetDashindexLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetDashindexLambdaVersiondCX5XsYQoyPE7M9CFtfTr64rQfWEIUD4aCy2PZmiTM"
+              "Ref": "GetDashindexLambdaVersion9bqDze8siscInlzWSreKdweF1WUVWr99u7Rg4BbgwY"
             },
             "Export": {
               "Name": "sls-serverless-restaurant-dev-GetDashindexLambdaFunctionQualifiedArn"
@@ -761,7 +832,7 @@
           "GetDashrestaurantsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetDashrestaurantsLambdaVersionEeV5pULcBGJkQy51VkiuClnITKyimtwN4tSx51Vq1X0"
+              "Ref": "GetDashrestaurantsLambdaVersionyUWwqdkOzAdfI6Tt7OKbzqZ24EyYjbzjqjQoTE"
             },
             "Export": {
               "Name": "sls-serverless-restaurant-dev-GetDashrestaurantsLambdaFunctionQualifiedArn"
@@ -792,6 +863,21 @@
             "Export": {
               "Name": "sls-serverless-restaurant-dev-ServiceEndpoint"
             }
+          },
+          "RestaurantsTableName": {
+            "Value": "!Ref RestaurantsTable"
+          },
+          "CognitoUserPoolId": {
+            "Value": "!Ref CognitoUserPool"
+          },
+          "CognitoUserPoolArn": {
+            "Value": "!GetAtt CognitoUserPool.Arn"
+          },
+          "CognitoUserPoolWebClientId": {
+            "Value": "!Ref WebCognitoUserPoolClient"
+          },
+          "CognitoUserPoolServerClientId": {
+            "Value": "!Ref ServerCognitoUserPoolClient"
           }
         }
       },
@@ -901,9 +987,7 @@
           }
         ],
         "environment": {
-          "restaurants_api": {
-            "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GetDashindexLambdaFunction\"][\"Properties\"][\"Environment\"][\"Variables\"][\"restaurants_api\"]"
-          }
+          "restaurants_api": "https://#{ApiGatewayRestApi}.execute-api.#{AWS::Region}.amazonaws.com/dev/restaurants"
         },
         "name": "serverless-restaurant-dev-get-index",
         "package": {},
@@ -911,7 +995,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetDashindexLambdaVersiondCX5XsYQoyPE7M9CFtfTr64rQfWEIUD4aCy2PZmiTM"
+        "versionLogicalId": "GetDashindexLambdaVersion9bqDze8siscInlzWSreKdweF1WUVWr99u7Rg4BbgwY"
       },
       "get-restaurants": {
         "handler": "s_get_restaurants.handler",
@@ -938,7 +1022,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GetDashrestaurantsLambdaVersionEeV5pULcBGJkQy51VkiuClnITKyimtwN4tSx51Vq1X0"
+        "versionLogicalId": "GetDashrestaurantsLambdaVersionyUWwqdkOzAdfI6Tt7OKbzqZ24EyYjbzjqjQoTE"
       }
     },
     "resources": {
@@ -964,9 +1048,105 @@
               "WriteCapacityUnits": 1
             }
           }
+        },
+        "CognitoUserPool": {
+          "Type": "AWS::Cognito::UserPool",
+          "Properties": {
+            "AliasAttributes": [
+              "email"
+            ],
+            "UsernameConfiguration": {
+              "CaseSensitive": false
+            },
+            "AutoVerifiedAttributes": [
+              "email"
+            ],
+            "Policies": {
+              "PasswordPolicy": {
+                "MinimumLength": 8,
+                "RequireLowercase": true,
+                "RequireNumbers": true,
+                "RequireUppercase": true,
+                "RequireSymbols": true
+              }
+            },
+            "Schema": [
+              {
+                "AttributeDataType": "String",
+                "Mutable": true,
+                "Name": "given_name",
+                "Required": true,
+                "StringAttributeConstraints": {
+                  "MinLength": "1"
+                }
+              },
+              {
+                "AttributeDataType": "String",
+                "Mutable": true,
+                "Name": "family_name",
+                "Required": true,
+                "StringAttributeConstraints": {
+                  "MinLength": "1"
+                }
+              },
+              {
+                "AttributeDataType": "String",
+                "Mutable": true,
+                "Name": "email",
+                "Required": true,
+                "StringAttributeConstraints": {
+                  "MinLength": "1"
+                }
+              }
+            ]
+          }
+        },
+        "WebCognitoUserPoolClient": {
+          "Type": "AWS::Cognito::UserPoolClient",
+          "Properties": {
+            "ClientName": "web",
+            "UserPoolId": {
+              "Ref": "CognitoUserPool"
+            },
+            "ExplicitAuthFlows": [
+              "ALLOW_USER_SRP_AUTH",
+              "ALLOW_REFRESH_TOKEN_AUTH"
+            ],
+            "PreventUserExistenceErrors": "ENABLED"
+          }
+        },
+        "ServerCognitoUserPoolClient": {
+          "Type": "AWS::Cognito::UserPoolClient",
+          "Properties": {
+            "ClientName": "server",
+            "UserPoolId": {
+              "Ref": "CognitoUserPool"
+            },
+            "ExplicitAuthFlows": [
+              "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+              "ALLOW_REFRESH_TOKEN_AUTH"
+            ],
+            "PreventUserExistenceErrors": "ENABLED"
+          }
         }
       },
-      "Outputs": {}
+      "Outputs": {
+        "RestaurantsTableName": {
+          "Value": "!Ref RestaurantsTable"
+        },
+        "CognitoUserPoolId": {
+          "Value": "!Ref CognitoUserPool"
+        },
+        "CognitoUserPoolArn": {
+          "Value": "!GetAtt CognitoUserPool.Arn"
+        },
+        "CognitoUserPoolWebClientId": {
+          "Value": "!Ref WebCognitoUserPoolClient"
+        },
+        "CognitoUserPoolServerClientId": {
+          "Value": "!Ref ServerCognitoUserPoolClient"
+        }
+      }
     },
     "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
@@ -1000,7 +1180,7 @@
     "artifact": "C:\\Users\\Deserie Murembeni\\serverless-restaurant\\.serverless\\serverless-restaurant.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-restaurant/dev/1622977974373-2021-06-06T11:12:54.373Z",
+    "artifactDirectoryName": "serverless/serverless-restaurant/dev/1623496855533-2021-06-12T11:20:55.533Z",
     "artifact": "serverless-restaurant.zip"
   }
 }
